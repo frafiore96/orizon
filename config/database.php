@@ -6,7 +6,7 @@ class Database
 	private $host = "localhost";
 	private $db_name = "orizon";
 	private $username = "root";
-	// private $password = "Fiore@001";
+	private $password = "";
 	public $conn;
 	// Connessione al database
 	public function getConnection()
