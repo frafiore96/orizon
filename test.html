@@ -1,0 +1,544 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Orizon API - Test Interface</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            color: white;
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 2.5em;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+        }
+
+        .card {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        h2 {
+            color: #667eea;
+            margin-bottom: 20px;
+            border-bottom: 3px solid #667eea;
+            padding-bottom: 10px;
+        }
+
+        .endpoint-group {
+            margin-bottom: 30px;
+        }
+
+        .endpoint {
+            background: #f8f9fa;
+            border-left: 4px solid #667eea;
+            padding: 15px;
+            margin-bottom: 15px;
+            border-radius: 5px;
+        }
+
+        .endpoint-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 10px;
+        }
+
+        .method {
+            padding: 5px 15px;
+            border-radius: 5px;
+            font-weight: bold;
+            font-size: 0.9em;
+            color: white;
+        }
+
+        .method.get { background: #28a745; }
+        .method.post { background: #007bff; }
+        .method.put { background: #ffc107; }
+        .method.delete { background: #dc3545; }
+
+        .endpoint-url {
+            font-family: 'Courier New', monospace;
+            background: white;
+            padding: 8px;
+            border-radius: 5px;
+            flex: 1;
+        }
+
+        button {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1em;
+            transition: all 0.3s;
+        }
+
+        button:hover {
+            background: #764ba2;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        button:active {
+            transform: translateY(0);
+        }
+
+        textarea {
+            width: 100%;
+            min-height: 100px;
+            padding: 10px;
+            border: 2px solid #e0e0e0;
+            border-radius: 5px;
+            font-family: 'Courier New', monospace;
+            margin-top: 10px;
+            resize: vertical;
+        }
+
+        .response-box {
+            background: #2d2d2d;
+            color: #00ff00;
+            padding: 15px;
+            border-radius: 5px;
+            font-family: 'Courier New', monospace;
+            margin-top: 15px;
+            max-height: 400px;
+            overflow-y: auto;
+            white-space: pre-wrap;
+            display: none;
+        }
+
+        .response-box.show {
+            display: block;
+        }
+
+        .input-group {
+            margin-top: 10px;
+        }
+
+        .input-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #555;
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 8px;
+            border: 2px solid #e0e0e0;
+            border-radius: 5px;
+        }
+
+        .filter-group {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 10px;
+        }
+
+        .status-indicator {
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            margin-right: 5px;
+        }
+
+        .status-indicator.success { background: #28a745; }
+        .status-indicator.error { background: #dc3545; }
+
+        .info-box {
+            background: #e7f3ff;
+            border-left: 4px solid #2196F3;
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+        }
+
+        .info-box strong {
+            color: #2196F3;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🌍 Orizon API - Test Interface</h1>
+
+        <div class="card">
+            <div class="info-box">
+                <strong>ℹ️ Info:</strong> This page is a test interface for the Orizon API. It allows you to test the endpoints and their responses.
+            </div>
+        </div>
+
+        <!-- COUNTRIES -->
+        <div class="card">
+            <h2>🌍 API Countries</h2>
+
+            <div class="endpoint-group">
+                <!-- GET Countries -->
+                <div class="endpoint">
+                    <div class="endpoint-header">
+                        <span class="method get">GET</span>
+                        <span class="endpoint-url">/countries</span>
+                    </div>
+                    <button onclick="getCountries()">📋 Countries list</button>
+                    <div class="response-box" id="response-get-countries"></div>
+                </div>
+
+                <!-- GET Country by ID -->
+                <div class="endpoint">
+                    <div class="endpoint-header">
+                        <span class="method get">GET</span>
+                        <span class="endpoint-url">/countries/{id}</span>
+                    </div>
+                    <div class="input-group">
+                        <label>ID del paese:</label>
+                        <input type="number" id="country-id-get" placeholder="Es: 1" value="1">
+                    </div>
+                    <button onclick="getCountry()">🔍 Show the country</button>
+                    <div class="response-box" id="response-get-country"></div>
+                </div>
+
+                <!-- POST Country -->
+                <div class="endpoint">
+                    <div class="endpoint-header">
+                        <span class="method post">POST</span>
+                        <span class="endpoint-url">/countries</span>
+                    </div>
+                    <div class="input-group">
+                        <label>Nome del paese:</label>
+                        <input type="text" id="country-name-post" placeholder="Es: Germania">
+                    </div>
+                    <button onclick="createCountry()">➕ Create new country</button>
+                    <div class="response-box" id="response-post-country"></div>
+                </div>
+
+                <!-- PUT Country -->
+                <div class="endpoint">
+                    <div class="endpoint-header">
+                        <span class="method put">PUT</span>
+                        <span class="endpoint-url">/countries/{id}</span>
+                    </div>
+                    <div class="input-group">
+                        <label>Country ID to update:</label>
+                        <input type="number" id="country-id-put" placeholder="Es: 7">
+                    </div>
+                    <div class="input-group">
+                        <label>New name:</label>
+                        <input type="text" id="country-name-put" placeholder="Es: Austria">
+                    </div>
+                    <button onclick="updateCountry()">✏️ Update country</button>
+                    <div class="response-box" id="response-put-country"></div>
+                </div>
+
+                <!-- DELETE Country -->
+                <div class="endpoint">
+                    <div class="endpoint-header">
+                        <span class="method delete">DELETE</span>
+                        <span class="endpoint-url">/countries/{id}</span>
+                    </div>
+                    <div class="input-group">
+                        <label>Country ID to delete:</label>
+                        <input type="number" id="country-id-delete" placeholder="Es: 7">
+                    </div>
+                    <button onclick="deleteCountry()">🗑️ Delete country</button>
+                    <div class="response-box" id="response-delete-country"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- TRIPS -->
+        <div class="card">
+            <h2>✈️ API Trips</h2>
+
+            <div class="endpoint-group">
+                <!-- GET Trips -->
+                <div class="endpoint">
+                    <div class="endpoint-header">
+                        <span class="method get">GET</span>
+                        <span class="endpoint-url">/trips</span>
+                    </div>
+                    <div class="filter-group">
+                        <div class="input-group">
+                            <label>Filter by countries (IDs separated by comma):</label>
+                            <input type="text" id="trip-filter-countries" placeholder="Es: 1,2,3">
+                        </div>
+                        <div class="input-group">
+                            <label>Min. seats:</label>
+                            <input type="number" id="trip-filter-min" placeholder="Es: 10">
+                        </div>
+                        <div class="input-group">
+                            <label>Max. seats:</label>
+                            <input type="number" id="trip-filter-max" placeholder="Es: 20">
+                        </div>
+                    </div>
+                    <button onclick="getTrips()">📋 Trips list (filtered)</button>
+                    <div class="response-box" id="response-get-trips"></div>
+                </div>
+
+                <!-- GET Trip by ID -->
+                <div class="endpoint">
+                    <div class="endpoint-header">
+                        <span class="method get">GET</span>
+                        <span class="endpoint-url">/trips/{id}</span>
+                    </div>
+                    <div class="input-group">
+                        <label>Trip ID:</label>
+                        <input type="number" id="trip-id-get" placeholder="Es: 1" value="1">
+                    </div>
+                    <button onclick="getTrip()">🔍 Show trip</button>
+                    <div class="response-box" id="response-get-trip"></div>
+                </div>
+
+                <!-- POST Trip -->
+                <div class="endpoint">
+                    <div class="endpoint-header">
+                        <span class="method post">POST</span>
+                        <span class="endpoint-url">/trips</span>
+                    </div>
+                    <div class="input-group">
+                        <label>Country IDs (comma-separated):</label>
+                        <input type="text" id="trip-countries-post" placeholder="Es: 1,2,3" value="1,2">
+                    </div>
+                    <div class="input-group">
+                        <label>Available seats:</label>
+                        <input type="number" id="trip-seats-post" placeholder="Es: 20" value="15">
+                    </div>
+                    <button onclick="createTrip()">➕ Create new trip</button>
+                    <div class="response-box" id="response-post-trip"></div>
+                </div>
+
+                <!-- PUT Trip -->
+                <div class="endpoint">
+                    <div class="endpoint-header">
+                        <span class="method put">PUT</span>
+                        <span class="endpoint-url">/trips/{id}</span>
+                    </div>
+                    <div class="input-group">
+                        <label>Trip ID to update:</label>
+                        <input type="number" id="trip-id-put" placeholder="Es: 1">
+                    </div>
+                    <div class="input-group">
+                        <label>Country IDs (leave empty to keep unchanged)</label>
+                        <input type="text" id="trip-countries-put" placeholder="Es: 2,3,4">
+                    </div>
+                    <div class="input-group">
+                        <label>Available seats (leave empty to keep unchanged):</label>
+                        <input type="number" id="trip-seats-put" placeholder="Es: 25">
+                    </div>
+                    <button onclick="updateTrip()">✏️ Update trip</button>
+                    <div class="response-box" id="response-put-trip"></div>
+                </div>
+
+                <!-- DELETE Trip -->
+                <div class="endpoint">
+                    <div class="endpoint-header">
+                        <span class="method delete">DELETE</span>
+                        <span class="endpoint-url">/trips/{id}</span>
+                    </div>
+                    <div class="input-group">
+                        <label>Trip ID to delete:</label>
+                        <input type="number" id="trip-id-delete" placeholder="Es: 4">
+                    </div>
+                    <button onclick="deleteTrip()">🗑️ Delete trip</button>
+                    <div class="response-box" id="response-delete-trip"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE = window.location.origin + window.location.pathname.replace('test.html', '');
+
+        function showResponse(elementId, data, status) {
+            const element = document.getElementById(elementId);
+            const statusIndicator = status >= 200 && status < 300 ? 'success' : 'error';
+            element.innerHTML = `<span class="status-indicator ${statusIndicator}"></span>Status: ${status}\n\n${JSON.stringify(data, null, 2)}`;
+            element.classList.add('show');
+        }
+
+        // === COUNTRIES ===
+
+        async function getCountries() {
+            try {
+                const response = await fetch(`${API_BASE}countries`);
+                const data = await response.json();
+                showResponse('response-get-countries', data, response.status);
+            } catch (error) {
+                showResponse('response-get-countries', { error: error.message }, 500);
+            }
+        }
+
+        async function getCountry() {
+            const id = document.getElementById('country-id-get').value;
+            try {
+                const response = await fetch(`${API_BASE}countries/${id}`);
+                const data = await response.json();
+                showResponse('response-get-country', data, response.status);
+            } catch (error) {
+                showResponse('response-get-country', { error: error.message }, 500);
+            }
+        }
+
+        async function createCountry() {
+            const name = document.getElementById('country-name-post').value;
+            try {
+                const response = await fetch(`${API_BASE}countries`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ name })
+                });
+                const data = await response.json();
+                showResponse('response-post-country', data, response.status);
+            } catch (error) {
+                showResponse('response-post-country', { error: error.message }, 500);
+            }
+        }
+
+        async function updateCountry() {
+            const id = document.getElementById('country-id-put').value;
+            const name = document.getElementById('country-name-put').value;
+            try {
+                const response = await fetch(`${API_BASE}countries/${id}`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ name })
+                });
+                const data = await response.json();
+                showResponse('response-put-country', data, response.status);
+            } catch (error) {
+                showResponse('response-put-country', { error: error.message }, 500);
+            }
+        }
+
+        async function deleteCountry() {
+            const id = document.getElementById('country-id-delete').value;
+            try {
+                const response = await fetch(`${API_BASE}countries/${id}`, {
+                    method: 'DELETE'
+                });
+                const data = await response.json();
+                showResponse('response-delete-country', data, response.status);
+            } catch (error) {
+                showResponse('response-delete-country', { error: error.message }, 500);
+            }
+        }
+
+        // === TRIPS ===
+
+        async function getTrips() {
+            const countries = document.getElementById('trip-filter-countries').value;
+            const minSeats = document.getElementById('trip-filter-min').value;
+            const maxSeats = document.getElementById('trip-filter-max').value;
+            
+            let url = `${API_BASE}trips?`;
+            if (countries) url += `countries=${countries}&`;
+            if (minSeats) url += `min_seats=${minSeats}&`;
+            if (maxSeats) url += `max_seats=${maxSeats}&`;
+            
+            try {
+                const response = await fetch(url);
+                const data = await response.json();
+                showResponse('response-get-trips', data, response.status);
+            } catch (error) {
+                showResponse('response-get-trips', { error: error.message }, 500);
+            }
+        }
+
+        async function getTrip() {
+            const id = document.getElementById('trip-id-get').value;
+            try {
+                const response = await fetch(`${API_BASE}trips/${id}`);
+                const data = await response.json();
+                showResponse('response-get-trip', data, response.status);
+            } catch (error) {
+                showResponse('response-get-trip', { error: error.message }, 500);
+            }
+        }
+
+        async function createTrip() {
+            const countries = document.getElementById('trip-countries-post').value;
+            const seats = document.getElementById('trip-seats-post').value;
+            const countryIds = countries.split(',').map(id => parseInt(id.trim()));
+            
+            try {
+                const response = await fetch(`${API_BASE}trips`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        country_ids: countryIds,
+                        available_seats: parseInt(seats)
+                    })
+                });
+                const data = await response.json();
+                showResponse('response-post-trip', data, response.status);
+            } catch (error) {
+                showResponse('response-post-trip', { error: error.message }, 500);
+            }
+        }
+
+        async function updateTrip() {
+            const id = document.getElementById('trip-id-put').value;
+            const countries = document.getElementById('trip-countries-put').value;
+            const seats = document.getElementById('trip-seats-put').value;
+            
+            const body = {};
+            if (countries) {
+                body.country_ids = countries.split(',').map(id => parseInt(id.trim()));
+            }
+            if (seats) {
+                body.available_seats = parseInt(seats);
+            }
+            
+            try {
+                const response = await fetch(`${API_BASE}trips/${id}`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(body)
+                });
+                const data = await response.json();
+                showResponse('response-put-trip', data, response.status);
+            } catch (error) {
+                showResponse('response-put-trip', { error: error.message }, 500);
+            }
+        }
+
+        async function deleteTrip() {
+            const id = document.getElementById('trip-id-delete').value;
+            try {
+                const response = await fetch(`${API_BASE}trips/${id}`, {
+                    method: 'DELETE'
+                });
+                const data = await response.json();
+                showResponse('response-delete-trip', data, response.status);
+            } catch (error) {
+                showResponse('response-delete-trip', { error: error.message }, 500);
+            }
+        }
+    </script>
+</body>
+</html>
